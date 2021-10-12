@@ -1,0 +1,23 @@
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: main
+
+jobs:
+  ensure-latest-code-from-master:
+    name: Ensure Latest Code From Master
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout master
+        uses: actions/checkout@v2
+          with:
+            ref: main
+
+      - name: ensure-latest-code-from-master
+        id:
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.USER_TOKEN }}
+          script: |
+            console.log(`merging-branch-sha: ${github.event.pull_request.base.sha}`)
