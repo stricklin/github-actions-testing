@@ -9,16 +9,40 @@ jobs:
     name: Ensure Latest Code From Master
     runs-on: ubuntu-18.04
     steps:
+      - name: checkout merging-branch
+        uses: actions/checkout@v2
+
       - name: checkout master
         uses: actions/checkout@v2
         with:
           ref: main
+          token: ${{ secrets.USER_TOKEN }}
+          path: main
 
-      - name: ensure-latest-code-from-master
-        id:
+      - name: install node dependencies
+        run: npm ci
+
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Ensure Latest Code From Master
+        id: ensure-latest-code-from-master
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.USER_TOKEN }}
           script: |
-            console.log(`merging-branch-sha: ${github.event.pull_request.base.sha}`)
-            console.log(`master-branch-sha: ${github.base_ref}`)
+            const isBranchUpToDate = require(".github/workflows/isBranchUpToDate.js")
+
+            let mergingBranchSha = ${{ github.event.pull_request.base.sha }}
+            console.log(`mergingBranchSha: ${{ mergingBranchSha }}`)
+            const outputs = isBranchUpToDate(mergingBranchSha, "main")
+
+            // add notices for all results for debug
+            Object.keys(outputs).map((key) => {
+              core.notice(`${key}: ${outputs[key]}`)
+              core.setOutput(key, outputs[key])
+            })
+
+            //let response = github.request("GET /repos/stricklin/github-actions-testing/ref/main")
