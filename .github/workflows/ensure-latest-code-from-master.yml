@@ -11,8 +11,8 @@ jobs:
     steps:
       - name: checkout master
         uses: actions/checkout@v2
-          with:
-            ref: main
+        with:
+          ref: main
 
       - name: ensure-latest-code-from-master
         id:
@@ -21,3 +21,4 @@ jobs:
           github-token: ${{ secrets.USER_TOKEN }}
           script: |
             console.log(`merging-branch-sha: ${github.event.pull_request.base.sha}`)
+            console.log(`master-branch-sha: ${github.base_ref}`)
