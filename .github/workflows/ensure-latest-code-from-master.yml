@@ -19,5 +19,5 @@ jobs:
         with:
           github-token: ${{ secrets.USER_TOKEN }}
           script: |
-            console.log(`merging-branch-sha: ${github.event.pull_request.base.sha}`)
-            console.log(`master-branch-sha: ${github.base_ref}`)
+            console.log(`merging-branch-sha: ${{ github.event.pull_request.base.sha }}`)
+            console.log(`master-branch-sha: ${{ github.base_ref }}`)
