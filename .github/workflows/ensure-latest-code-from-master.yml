@@ -15,7 +15,6 @@ jobs:
           ref: main
 
       - name: ensure-latest-code-from-master
-        id:
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.USER_TOKEN }}
